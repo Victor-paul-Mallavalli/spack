@@ -77,7 +77,11 @@ const CreatePost = () => {
 					onChange={(e) => setText(e.target.value)}
 				/>
 				{img && (
+<<<<<<< HEAD
 					<div className='relative w-72 mx-auto'>
+=======
+					<div className='relative w-72 mx-auto z-0'>
+>>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
 						<IoCloseSharp
 							className='absolute top-0 right-0 text-white bg-gray-800 rounded-full w-5 h-5 cursor-pointer'
 							onClick={() => {
@@ -89,7 +93,11 @@ const CreatePost = () => {
 					</div>
 				)}
 
+<<<<<<< HEAD
 				<div className='flex justify-between border-t py-2 border-t-gray-700'>
+=======
+				<div className='flex justify-between border-t py-2 border-t-gray-700 relative z-20 bg-transparent'>
+>>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
 					<div className='flex gap-1 items-center'>
 						<CiImageOn
 							className='fill-primary w-6 h-6 cursor-pointer'
@@ -98,7 +106,11 @@ const CreatePost = () => {
 						<BsEmojiSmileFill className='fill-primary w-5 h-5 cursor-pointer' />
 					</div>
 					<input type='file' accept='image/*' hidden ref={imgRef} onChange={handleImgChange} />
+<<<<<<< HEAD
 					<button className='btn btn-primary rounded-full btn-sm text-white px-4'>
+=======
+					<button type='submit' className='bg-primary text-white rounded-full px-4 py-1'>
+>>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
 						{isPending ? "Posting..." : "Post"}
 					</button>
 				</div>

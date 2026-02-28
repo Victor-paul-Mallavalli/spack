@@ -22,12 +22,20 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+<<<<<<< HEAD
     "express": "^4.19.2",
+=======
+    "express": "^4.21.2",
+>>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
     "framer-motion": "^11.11.9",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3"
   },
   "devDependencies": {
+<<<<<<< HEAD
+=======
+    "cross-env": "^10.1.0",
+>>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
     "nodemon": "^3.1.4"
   }
 }

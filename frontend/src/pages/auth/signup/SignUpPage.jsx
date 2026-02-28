@@ -228,8 +228,22 @@ const SignUpPage = () => {
           body: JSON.stringify({ email, username, fullName, password, mobile, dob, gender }), // Include gender
         });
 
+<<<<<<< HEAD
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to create account");
+=======
+        // Safely parse JSON — some responses may have an empty body
+        const text = await res.text();
+        let data = {};
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch (err) {
+          console.error("Failed to parse JSON response:", err);
+          data = {};
+        }
+
+        if (!res.ok) throw new Error(data.error || res.statusText || "Failed to create account");
+>>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
         return data;
       } catch (error) {
         console.error(error);

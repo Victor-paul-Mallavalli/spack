@@ -69,10 +69,24 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
+<<<<<<< HEAD
     const user = await User.findOne({ username });
     const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
 
     if (!user || !isPasswordCorrect) {
+=======
+    console.log("Login attempt for:", username);
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      console.log("Login failed: user not found for", username);
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password || "");
+    if (!isPasswordCorrect) {
+      console.log("Login failed: incorrect password for", username);
+>>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
       return res.status(400).json({ error: "Invalid username or password" });
     }
 
