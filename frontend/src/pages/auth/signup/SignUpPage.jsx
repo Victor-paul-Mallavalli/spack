@@ -3,206 +3,136 @@ import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import logoImage from "./logo.jpeg";
 import BackgroundImage from "./back.png";
-import { MdOutlineMail, MdPassword, MdPhone } from "react-icons/md";
+import { MdOutlineMail, MdPassword, MdPhone, MdDriveFileRenameOutline } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
-import { MdDriveFileRenameOutline } from "react-icons/md";
 import { BsCalendarDate } from "react-icons/bs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+
+/* ---------------- Styled Components ---------------- */
 
 const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  min-width: 100vw;
   background-image: url(${BackgroundImage});
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
+`;
+
+const hueRotate = keyframes`
+  100% {
+    filter: hue-rotate(360deg);
+  }
 `;
 
 const Wrapper = styled.div`
   position: relative;
   width: 500px;
-  height: auto;
-  left: 350px;
-  bottom: -50px;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   box-shadow: 0 0 50px #0ef;
   border-radius: 20px;
   padding: 40px;
-  border: 5px solid #0ef;
+  border: 4px solid #0ef;
   display: flex;
   flex-direction: column;
   align-items: center;
 
   &:hover {
-    animation: ${keyframes`
-      100% {
-        filter: hue-rotate(360deg);
-      }
-    `} 1s linear infinite;
+    animation: ${hueRotate} 1s linear infinite;
   }
 `;
 
 const LogoContainer = styled.div`
   position: absolute;
-  top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: -70px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
-  width: 220px;
-  height: 200px;
-  background: #000;
-  border: 1px solid #0ef;
-  display: flex;
-  justify-content: center;
-  margin: -30px auto 20px;
-  align-items: center;
+  overflow: hidden;
   box-shadow: 0 0 10px #0ef;
 
   img {
-    border-radius: 50%;
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 `;
 
-const FormWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  transition: 1s ease-in-out;
-`;
-
 const Heading = styled.h2`
-  font-size: 30px;
+  font-size: 28px;
   color: #fff;
+  margin-top: 100px;
   text-align: center;
 `;
 
 const InputContainer = styled.div`
   display: flex;
-  flex-wrap: wrap; /* Allows inputs to wrap into rows */
-  justify-content: space-between; /* Space out the input fields */
-  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
 `;
 
 const InputGroup = styled.div`
   position: relative;
   margin: 15px 0;
   border-bottom: 2px solid #fff;
-  flex: 0 0 48%; /* Each input takes up about 48% of the width */
-
-  label {
-    position: absolute;
-    top: 50%;
-    left: 5px;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #fff;
-    pointer-events: none;
-    transition: 0.5s;
-  }
+  flex: 0 0 48%;
 
   input {
     width: 100%;
     height: 40px;
-    font-size: 16px;
-    color: #fff; // Change text color to white
-    padding: 0 5px 0 50px;
-    background: transparent; // Keep background transparent for styling
-    border: none; // No border to maintain transparency
+    font-size: 15px;
+    color: #fff;
+    padding-left: 35px;
+    background: transparent;
+    border: none;
     outline: none;
-
-    &:focus ~ label,
-    &:valid ~ label {
-      top: -5px;
-    }
-
-    // Adding a style for the date input button (calendar icon)
-    &::-webkit-calendar-picker-indicator {
-      color: #fff; // Change the color of the calendar button to white
-    }
   }
 
   svg {
     position: absolute;
-    top: 50%;
+    top: 10px;
     left: 0;
-    transform: translateY(-50%);
-    font-size: 20px;
     color: #fff;
   }
 `;
 
 const GenderGroup = styled.div`
-  flex: 0 0 100%; /* Make the gender selection span the full width */
+  width: 100%;
   margin-top: 15px;
-
-  label {
-    color: #fff;
-    margin-right: 10px;
-  }
+  color: #fff;
 
   div {
-    display: flex;
-    justify-content: flex-start;
     margin-top: 5px;
-
-    label {
-      margin-right: 15px; /* Space between radio options */
-      color: #fff; /* Color for the radio option labels */
-    }
+    display: flex;
+    gap: 15px;
   }
 `;
 
 const Button = styled.button`
   width: 100%;
   height: 40px;
+  margin-top: 20px;
   background: #0ef;
-  box-shadow: 0 0 10px #0ef;
-  font-size: 16px;
   color: #000;
-  font-weight: 500;
-  cursor: pointer;
   border-radius: 30px;
   border: none;
-  outline: none;
-
-  &:hover {
-    background: #00e5ff;
-    box-shadow: 0 0 20px #00e5ff;
-  }
+  cursor: pointer;
 `;
 
 const SignInLink = styled.div`
-  font-size: 14px;
+  margin-top: 10px;
   text-align: center;
-  margin: -8px 0;
+  font-size: 14px;
 
-  p {
-    color: #fff;
-
-    a {
-      color: #0ef;
-      text-decoration: none;
-      font-weight: 500;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+  a {
+    color: #0ef;
+    text-decoration: none;
   }
 `;
+
+/* ---------------- Component ---------------- */
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -212,43 +142,28 @@ const SignUpPage = () => {
     password: "",
     mobile: "",
     dob: "",
-    gender: "", // Added gender field
+    gender: "",
   });
 
   const queryClient = useQueryClient();
 
-  const { mutate, isError, isPending, error } = useMutation({
-    mutationFn: async ({ email, username, fullName, password, mobile, dob, gender }) => {
-      try {
-        const res = await fetch("/api/auth/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, username, fullName, password, mobile, dob, gender }), // Include gender
-        });
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: async (data) => {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-<<<<<<< HEAD
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Failed to create account");
-=======
-        // Safely parse JSON — some responses may have an empty body
-        const text = await res.text();
-        let data = {};
-        try {
-          data = text ? JSON.parse(text) : {};
-        } catch (err) {
-          console.error("Failed to parse JSON response:", err);
-          data = {};
-        }
+      const result = await res.json();
 
-        if (!res.ok) throw new Error(data.error || res.statusText || "Failed to create account");
->>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
-        return data;
-      } catch (error) {
-        console.error(error);
-        throw error;
+      if (!res.ok) {
+        throw new Error(result.error || "Failed to create account");
       }
+
+      return result;
     },
     onSuccess: () => {
       toast.success("Account created successfully");
@@ -261,147 +176,77 @@ const SignUpPage = () => {
     mutate(formData);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
     <PageWrapper>
       <Wrapper>
         <LogoContainer>
-          <img src={logoImage} alt="Company Logo" />
+          <img src={logoImage} alt="Logo" />
         </LogoContainer>
-        <FormWrapper>
-          <form onSubmit={handleSubmit}>
-            <Heading>Join today.</Heading>
-            <InputContainer>
-              <InputGroup>
-                <MdOutlineMail />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  name="email"
-                  onChange={handleInputChange}
-                  value={formData.email}
-                  required
-                />
-                <label></label>
-              </InputGroup>
-              <InputGroup>
-                <FaUser />
-                <input
-                  type="text"
-                  placeholder="Username"
-                  name="username"
-                  onChange={handleInputChange}
-                  value={formData.username}
-                  required
-                />
-                <label></label>
-              </InputGroup>
-              <InputGroup>
-                <MdDriveFileRenameOutline />
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  name="fullName"
-                  onChange={handleInputChange}
-                  value={formData.fullName}
-                  required
-                />
-                <label></label>
-              </InputGroup>
-              <InputGroup>
-                <MdPassword />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  onChange={handleInputChange}
-                  value={formData.password}
-                  required
-                />
-                <label></label>
-              </InputGroup>
-              <InputGroup>
-                <MdPhone />
-                <input
-                  type="tel"
-                  placeholder="Mobile Number"
-                  name="mobile"
-                  onChange={handleInputChange}
-                  value={formData.mobile}
-                  required
-                />
-                <label></label>
-              </InputGroup>
-              <InputGroup>
-                <BsCalendarDate />
-                <input
-                  type="date"
-                  name="dob"
-                  onChange={handleInputChange}
-                  value={formData.dob}
-                  required
-                />
-                <label></label>
-              </InputGroup>
-            </InputContainer>
 
-            {/* Gender Selection without input line */}
-            <GenderGroup>
-              <label>Gender:</label>
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    value="male"
-                    name="gender"
-                    checked={formData.gender === "male"}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  Male
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="female"
-                    name="gender"
-                    checked={formData.gender === "female"}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  Female
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="other"
-                    name="gender"
-                    checked={formData.gender === "other"}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  Other
-                </label>
-              </div>
-            </GenderGroup>
+        <form onSubmit={handleSubmit}>
+          <Heading>Join today</Heading>
 
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating Account..." : "Sign Up"}
-            </Button>
+          <InputContainer>
+            <InputGroup>
+              <MdOutlineMail />
+              <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+            </InputGroup>
 
-            {isError && <p style={{ color: "red" }}>{error.message}</p>}
+            <InputGroup>
+              <FaUser />
+              <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
+            </InputGroup>
 
-            <SignInLink>
-              <p>
-                Already have an account? <Link to="/login">Sign in</Link>
-              </p>
-            </SignInLink>
-          </form>
-        </FormWrapper>
+            <InputGroup>
+              <MdDriveFileRenameOutline />
+              <input type="text" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
+            </InputGroup>
+
+            <InputGroup>
+              <MdPassword />
+              <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+            </InputGroup>
+
+            <InputGroup>
+              <MdPhone />
+              <input type="tel" name="mobile" placeholder="Mobile Number" value={formData.mobile} onChange={handleChange} required />
+            </InputGroup>
+
+            <InputGroup>
+              <BsCalendarDate />
+              <input type="date" name="dob" value={formData.dob} onChange={handleChange} required />
+            </InputGroup>
+          </InputContainer>
+
+          <GenderGroup>
+            <label>Gender:</label>
+            <div>
+              <label>
+                <input type="radio" name="gender" value="male" checked={formData.gender === "male"} onChange={handleChange} required /> Male
+              </label>
+              <label>
+                <input type="radio" name="gender" value="female" checked={formData.gender === "female"} onChange={handleChange} required /> Female
+              </label>
+              <label>
+                <input type="radio" name="gender" value="other" checked={formData.gender === "other"} onChange={handleChange} required /> Other
+              </label>
+            </div>
+          </GenderGroup>
+
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Creating Account..." : "Sign Up"}
+          </Button>
+
+          {isError && <p style={{ color: "red" }}>{error.message}</p>}
+
+          <SignInLink>
+            Already have an account? <Link to="/login">Sign in</Link>
+          </SignInLink>
+        </form>
       </Wrapper>
     </PageWrapper>
   );

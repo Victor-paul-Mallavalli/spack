@@ -1,8 +1,9 @@
-import { generateTokenAndSetCookie } from "../lib/utils/generateToken.js"; 
+import { generateTokenAndSetCookie } from "../lib/utils/generateToken.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
-// Signup Controller
+/* ================= SIGNUP ================= */
+
 export const signup = async (req, res) => {
   try {
     const { fullName, username, email, password, mobile, dob, gender } = req.body;
@@ -22,7 +23,7 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "Email is already taken" });
     }
 
-    if (password.length < 6) {
+    if (!password || password.length < 6) {
       return res.status(400).json({ error: "Password must be at least 6 characters long" });
     }
 
@@ -36,57 +37,49 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       mobile,
       dob,
-      gender, // Include gender
+      gender,
     });
 
-    if (newUser) {
-      generateTokenAndSetCookie(newUser._id, res);
-      await newUser.save();
+    await newUser.save();
 
-      res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        username: newUser.username,
-        email: newUser.email,
-        mobile: newUser.mobile,
-        dob: newUser.dob,
-        gender: newUser.gender, // Include gender in response
-        followers: newUser.followers,
-        following: newUser.following,
-        profileImg: newUser.profileImg,
-        coverImg: newUser.coverImg,
-      });
-    } else {
-      res.status(400).json({ error: "Invalid user data" });
-    }
+    generateTokenAndSetCookie(newUser._id, res);
+
+    res.status(201).json({
+      _id: newUser._id,
+      fullName: newUser.fullName,
+      username: newUser.username,
+      email: newUser.email,
+      mobile: newUser.mobile,
+      dob: newUser.dob,
+      gender: newUser.gender,
+      followers: newUser.followers,
+      following: newUser.following,
+      profileImg: newUser.profileImg,
+      coverImg: newUser.coverImg,
+    });
   } catch (error) {
-    console.log("Error in signup controller", error.message);
+    console.log("Error in signup controller:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Login Controller
+/* ================= LOGIN ================= */
+
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-<<<<<<< HEAD
-    const user = await User.findOne({ username });
-    const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
-
-    if (!user || !isPasswordCorrect) {
-=======
-    console.log("Login attempt for:", username);
 
     const user = await User.findOne({ username });
     if (!user) {
-      console.log("Login failed: user not found for", username);
       return res.status(400).json({ error: "Invalid username or password" });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password || "");
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user.password
+    );
+
     if (!isPasswordCorrect) {
-      console.log("Login failed: incorrect password for", username);
->>>>>>> d5e31a6 (Prepare project for Github: README and LICENSE)
       return res.status(400).json({ error: "Invalid username or password" });
     }
 
@@ -103,29 +96,31 @@ export const login = async (req, res) => {
       coverImg: user.coverImg,
     });
   } catch (error) {
-    console.log("Error in login controller", error.message);
+    console.log("Error in login controller:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Logout Controller
+/* ================= LOGOUT ================= */
+
 export const logout = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.log("Error in logout controller", error.message);
+    console.log("Error in logout controller:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Get Me Controller
+/* ================= GET ME ================= */
+
 export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
     res.status(200).json(user);
   } catch (error) {
-    console.log("Error in getMe controller", error.message);
+    console.log("Error in getMe controller:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
